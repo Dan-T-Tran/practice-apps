@@ -48,11 +48,15 @@ var Input = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (e) {
-      console.log(_this.state.currentWord);
-      console.log(_this.state.currentDefinition);
       event.preventDefault();
+      event.target.reset();
 
       _this.props.input(_this.state.currentWord, _this.state.currentDefinition);
+
+      _this.setState({
+        currentWord: '',
+        currentDefinition: ''
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleClick", function () {});
@@ -103,7 +107,8 @@ var Input = /*#__PURE__*/function (_React$Component) {
             className: "wordNameInput",
             name: "wordInput",
             placeholder: "Insert Word",
-            onChange: this.handleWordChange
+            onChange: this.handleWordChange,
+            required: true
           }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
             type: "submit",
             className: "submitButton",
@@ -113,7 +118,8 @@ var Input = /*#__PURE__*/function (_React$Component) {
             className: "wordDefinitionInput",
             name: "definitionInput",
             placeholder: "Insert Definition",
-            onChange: this.handleDefinitionChange
+            onChange: this.handleDefinitionChange,
+            required: true
           })]
         })]
       });

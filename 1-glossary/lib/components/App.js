@@ -56,7 +56,22 @@ var App = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "searchWords", function (query) {
-      axios.get('/glossary');
+      axios.get('/glossary', {
+        params: {
+          word: query
+        }
+      }).then(function (response) {
+        if (response.data.error) {
+          alert('Failed to get words');
+        } else {
+          _this.setState({
+            words: response.data,
+            currentSearch: query
+          });
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "insertWord", function (word, definition) {
@@ -69,35 +84,31 @@ var App = /*#__PURE__*/function (_React$Component) {
         } else if (response.data === 'word already saved') {
           alert('Word already saved. Consider updating the word instead!');
         } else {
-          console.log('word saved!');
+          _this.searchWords(_this.state.currentSearch);
         }
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "updateWord", function () {});
+
+    _defineProperty(_assertThisInitialized(_this), "deleteWord", function () {});
+
     _this.state = {
       // words: [],
-      words: _this.props.testWords,
-      filteredWords: _this.props.testWords
-    };
+      words: [],
+      currentSearch: '' // filteredWords: this.props.testWords
+
+    }; // this.timeGate = false;
+
     return _this;
   }
-  /*
-  NOW TO SET UP AXIOS AND EXPRESS OH BOY MY FAVORIIIIIIITE
-  */
-  // searchWords = (query) => {
-  //   let tempWords = [];
-  //   for (let word of this.state.words) {
-  //     if (word.word.toLowerCase().includes(query.toLowerCase())) {
-  //       tempWords.push(word);
-  //     }
-  //   }
-  //   this.setState({
-  //     filteredWords: tempWords
-  //   });
-  // };
-
 
   _createClass(App, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.searchWords('');
+    }
+  }, {
     key: "render",
     value: function render() {
       // let filteredWords = [];
@@ -107,7 +118,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           search: this.searchWords.bind(this),
           input: this.insertWord.bind(this)
         }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_RightBar["default"], {
-          words: this.state.filteredWords
+          words: this.state.words
         })]
       });
     }

@@ -10,10 +10,13 @@ class Input extends React.Component {
   }
 
   handleSubmit = (e) => {
-    console.log(this.state.currentWord);
-    console.log(this.state.currentDefinition);
     event.preventDefault();
-    this.props.input(this.state.currentWord, this.state.currentDefinition);
+    event.target.reset();
+    this.props.input(this.state.currentWord, this.state.currentDefinition)
+    this.setState({
+      currentWord: '',
+      currentDefinition: ''
+    });
   };
 
   handleClick = () => {
@@ -43,9 +46,9 @@ class Input extends React.Component {
         </form>
 
         <form className='wordInput' onSubmit={this.handleSubmit}>
-          <input type='text' className='wordNameInput' name='wordInput' placeholder='Insert Word' onChange={this.handleWordChange}/>
+          <input type='text' className='wordNameInput' name='wordInput' placeholder='Insert Word' onChange={this.handleWordChange} required/>
           <button type='submit' className='submitButton'>Submit</button>
-          <input type='text' className='wordDefinitionInput' name='definitionInput' placeholder='Insert Definition' onChange={this.handleDefinitionChange}/>
+          <input type='text' className='wordDefinitionInput' name='definitionInput' placeholder='Insert Definition' onChange={this.handleDefinitionChange} required/>
         </form>
       </div>
     )

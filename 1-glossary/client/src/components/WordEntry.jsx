@@ -7,9 +7,11 @@ class WordEntry extends React.Component {
 
   render() {
     return(
-      <div>
-        {this.props.word.word}
-        {this.props.word.definition}
+      <div className='wordEntry'>
+        <h3>{this.props.word.word}</h3>
+        <h3>{this.props.word.definition}</h3>
+        <button>Edit</button>
+        <button>Delete</button>
       </div>
     )
   }

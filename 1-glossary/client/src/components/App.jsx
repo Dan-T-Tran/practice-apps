@@ -10,38 +10,31 @@ class App extends React.Component {
     super(props);
     this.state = {
       // words: [],
-      words: this.props.testWords,
-      filteredWords: this.props.testWords
+      words: [],
+      currentSearch: ''
+      // filteredWords: this.props.testWords
     };
+    // this.timeGate = false;
   }
 
-/*
-NOW TO SET UP AXIOS AND EXPRESS OH BOY MY FAVORIIIIIIITE
-*/
-
-  // searchWords = (query) => {
-  //   let tempWords = [];
-  //   for (let word of this.state.words) {
-  //     if (word.word.toLowerCase().includes(query.toLowerCase())) {
-  //       tempWords.push(word);
-  //     }
-  //   }
-  //   this.setState({
-  //     filteredWords: tempWords
-  //   });
-  // };
+  componentDidMount() {
+    this.searchWords('');
+  }
 
   searchWords = (query) => {
-    axios.get('/glossary')
+    axios.get('/glossary', {params: {word: query}})
+    .then((response) => {
+      if (response.data.error) {
+        alert('Failed to get words');
+      } else {
+        this.setState({
+          words: response.data,
+          currentSearch: query
+        })
+      }
+    })
+    .catch((err) => {console.log(err)});
   };
-
-  // insertWord = (word, definition) => {
-  //   let tempWords = this.state.words.slice();
-  //   tempWords.push({word:word, definition:definition});
-  //   this.setState({
-  //     words: tempWords
-  //   }, () => this.searchWords(''));
-  // }
 
   insertWord = (word, definition) => {
     axios.post('/glossary', {word: word, definition: definition})
@@ -51,10 +44,18 @@ NOW TO SET UP AXIOS AND EXPRESS OH BOY MY FAVORIIIIIIITE
       } else if (response.data === 'word already saved') {
         alert('Word already saved. Consider updating the word instead!');
       } else {
-        console.log('word saved!');
+        this.searchWords(this.state.currentSearch);
       }
     })
-  }
+  };
+
+  updateWord = () => {
+
+  };
+
+  deleteWord = () => {
+
+  };
 
 
   render() {
@@ -71,7 +72,7 @@ NOW TO SET UP AXIOS AND EXPRESS OH BOY MY FAVORIIIIIIITE
         />
 
         <RightBar
-          words={this.state.filteredWords}
+          words={this.state.words}
         />
       </div>
     )

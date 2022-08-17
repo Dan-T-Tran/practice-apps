@@ -13,9 +13,15 @@ let Word = mongoose.model('Words', wordSchema);
 module.exports = {
   postWord: function(query, callback) {
     let newWord = new Word(query);
-    let word = {word: query.word};
+    // let word = {word: query.word};
+    let regex = new RegExp(`^${query.word}$`, 'i');
+    // console.log(word);
+    // console.log(regex);
 
-    Word.find(word, (err, document) => {
+    //Regex used to find word match and is case-insensitive via 'i'
+    //Will only find exact match from start of string, will ignore past the query
+
+    Word.find({word: {$regex: regex}}, (err, document) => {
       if (err) {
         callback(err);
       } else if (document.length === 0) {
@@ -34,8 +40,27 @@ module.exports = {
     })
   },
 
-  searchWord: function(query) {
-
+  searchWord: function(query, callback) {
+    if (query.word) {
+      // console.log('there is a word')
+      let regex = new RegExp(`${query.word}`, 'i');
+      Word.find({word: {$regex: regex}}, (err, documents) => {
+        if (err) {
+          callback(err);
+        } else {
+          callback(null, documents);
+        }
+      })
+    } else {
+      // console.log('there is no word')
+      Word.find((err, documents) => {
+        if (err) {
+          callback(err);
+        } else {
+          callback(null, documents);
+        }
+      })
+    }
   },
 
   updateWord: function() {
@@ -46,6 +71,18 @@ module.exports = {
 
   }
 };
+
+  //update and delete shouldn't need regex since they're pulling the name directly from buttons
+
+
+/*
+REGEX SETUP EXAMPLE FOR MONGODB:
+    var wordy = 'cat'
+    let check = new RegExp(`^${wordy}`, 'i');
+    console.log(typeof check);
+    console.log(check);
+
+*/
 
 // 1. Use mongoose to establish a connection to MongoDB
 // 2. Set up any schema and models needed by the app

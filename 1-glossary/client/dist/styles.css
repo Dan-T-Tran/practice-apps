@@ -58,3 +58,10 @@ main {
   padding: 16px;
   margin: auto;
 }
+
+.wordEntry {
+  margin: 5%;
+  padding: 5%;
+  border: 4px solid gray;
+  box-shadow: 4px 10px rgb(63, 62, 62);
+}

@@ -25,11 +25,19 @@ app.post('/glossary', (req, res) => {
         console.log('word saved!');
         res.send('word saved');
       }
-    })
+    });
 });
 
 app.get('/glossary', (req, res) => {
-
+  searchWord(req.query, (err, response) => {
+    if (err) {
+      console.error(err);
+      res.send({error: true});
+    } else {
+      console.log(response);
+      res.send(response);
+    }
+  });
 });
 
 app.put('/glossary', (req, res) => {

@@ -48,7 +48,16 @@ var WordEntry = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-        children: [this.props.word.word, this.props.word.definition]
+        className: "wordEntry",
+        children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("h3", {
+          children: this.props.word.word
+        }), /*#__PURE__*/(0, _jsxRuntime.jsx)("h3", {
+          children: this.props.word.definition
+        }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+          children: "Edit"
+        }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+          children: "Delete"
+        })]
       });
     }
   }]);
