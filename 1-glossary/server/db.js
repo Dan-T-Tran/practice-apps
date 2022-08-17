@@ -8,14 +8,33 @@ const wordSchema = new mongoose.Schema({
   definition: String
 });
 
-const Word = mongoose.model('Words', wordSchema);
+let Word = mongoose.model('Words', wordSchema);
 
 module.exports = {
-  postWord: function() {
+  postWord: function(query, callback) {
+    let newWord = new Word(query);
+    let word = {word: query.word};
 
+    Word.find(word, (err, document) => {
+      if (err) {
+        callback(err);
+      } else if (document.length === 0) {
+        // console.log('saving...')
+        newWord.save((err, document) => {
+          if (err) {
+            callback(err);
+          } else {
+            callback(null, 'word saved');
+          }
+        })
+      } else {
+        callback(null, 'word already saved');
+        // console.log('word already saved');
+      }
+    })
   },
 
-  searchWord: function() {
+  searchWord: function(query) {
 
   },
 
