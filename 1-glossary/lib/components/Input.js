@@ -47,12 +47,33 @@ var Input = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
 
-    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function () {});
+    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (e) {
+      console.log(_this.state.currentWord);
+      console.log(_this.state.currentDefinition);
+      event.preventDefault();
+
+      _this.props.input(_this.state.currentWord, _this.state.currentDefinition);
+    });
 
     _defineProperty(_assertThisInitialized(_this), "handleClick", function () {});
 
+    _defineProperty(_assertThisInitialized(_this), "handleWordChange", function (query) {
+      // console.log(query.target.value);
+      _this.setState({
+        currentWord: query.target.value
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleDefinitionChange", function (query) {
+      // console.log(query.target.value);
+      _this.setState({
+        currentDefinition: query.target.value
+      });
+    });
+
     _this.state = {
-      currentSearch: ''
+      currentWord: '',
+      currentDefinition: ''
     };
     return _this;
   }
@@ -60,6 +81,8 @@ var Input = /*#__PURE__*/function (_React$Component) {
   _createClass(Input, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
         children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("form", {
           className: "wordSearch",
@@ -67,22 +90,30 @@ var Input = /*#__PURE__*/function (_React$Component) {
             type: "text",
             className: "wordSearchInput",
             name: "wordSearch",
-            placeholder: "Search Word"
+            placeholder: "Search Word",
+            onChange: function onChange(e) {
+              return _this2.props.search(e.target.value);
+            }
           })
         }), /*#__PURE__*/(0, _jsxRuntime.jsxs)("form", {
           className: "wordInput",
+          onSubmit: this.handleSubmit,
           children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
             type: "text",
             className: "wordNameInput",
             name: "wordInput",
-            placeholder: "Insert Word"
+            placeholder: "Insert Word",
+            onChange: this.handleWordChange
           }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+            type: "submit",
+            className: "submitButton",
             children: "Submit"
           }), /*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
             type: "text",
             className: "wordDefinitionInput",
             name: "definitionInput",
-            placeholder: "Insert Definition"
+            placeholder: "Insert Definition",
+            onChange: this.handleDefinitionChange
           })]
         })]
       });

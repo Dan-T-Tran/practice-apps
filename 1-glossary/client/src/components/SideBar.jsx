@@ -3,7 +3,10 @@ import Input from './Input.jsx'
 
 const SideBar = (props) => (
   <div id='sideBar'>
-    <Input />
+    <Input
+      search={props.search}
+      input={props.input}
+    />
   </div>
 )
 

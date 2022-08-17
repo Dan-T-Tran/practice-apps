@@ -9,22 +9,46 @@ class App extends React.Component {
     this.state = {
       // words: [],
       words: this.props.testWords,
+      filteredWords: this.props.testWords
     };
+  }
+
+  searchWords = (query) => {
+    let tempWords = [];
+    for (let word of this.state.words) {
+      if (word.word.toLowerCase().includes(query.toLowerCase())) {
+        tempWords.push(word);
+      }
+    }
+    this.setState({
+      filteredWords: tempWords
+    });
+  }
+
+  insertWord = (word, definition) => {
+    let tempWords = this.state.words.slice();
+    tempWords.push({word:word, definition:definition});
+    this.setState({
+      words: tempWords
+    }, () => this.searchWords(''));
   }
 
 
   render() {
-    let filteredWords = [];
+    // let filteredWords = [];
 
 
     return (
       <div id='app'>
         <TopBar />
 
-        <SideBar />
+        <SideBar
+          search={this.searchWords.bind(this)}
+          input={this.insertWord.bind(this)}
+        />
 
         <RightBar
-          words={this.state.words}
+          words={this.state.filteredWords}
         />
       </div>
     )

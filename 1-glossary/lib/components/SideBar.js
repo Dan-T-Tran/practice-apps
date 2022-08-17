@@ -16,7 +16,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var SideBar = function SideBar(props) {
   return /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
     id: "sideBar",
-    children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_Input["default"], {})
+    children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_Input["default"], {
+      search: props.search,
+      input: props.input
+    })
   });
 };
 
