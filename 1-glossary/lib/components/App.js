@@ -43,6 +43,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var axios = require('axios');
 
+var _ = require('underscore');
+
 var App = /*#__PURE__*/function (_React$Component) {
   _inherits(App, _React$Component);
 
@@ -56,22 +58,45 @@ var App = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "searchWords", function (query) {
+      var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       axios.get('/glossary', {
         params: {
-          word: query
+          word: query,
+          index: page
         }
       }).then(function (response) {
-        if (response.data.error) {
+        if (response.data === 'error') {
           alert('Failed to get words');
         } else {
+          var tempPages = [1];
+          var tempPageIndex = 2;
+          var amount = response.data.amount;
+
+          while (amount >= 11) {
+            tempPages.push(tempPageIndex);
+            tempPageIndex++;
+            amount -= 10;
+          }
+
+          console.log(response.data);
+
           _this.setState({
-            words: response.data,
-            currentSearch: query
+            words: response.data.documents,
+            wordAmount: response.data.amount,
+            currentSearch: query,
+            clickedIndex: undefined,
+            pages: tempPages,
+            clickedPage: page,
+            remainder: 10 - response.data.remainder
           });
         }
       })["catch"](function (err) {
         console.log(err);
       });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "pageClick", function (page) {
+      _this.searchWords(_this.state.currentSearch, page);
     });
 
     _defineProperty(_assertThisInitialized(_this), "insertWord", function (word, definition) {
@@ -89,15 +114,60 @@ var App = /*#__PURE__*/function (_React$Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "updateWord", function () {});
+    _defineProperty(_assertThisInitialized(_this), "editClick", function (index) {
+      if (index !== _this.state.clickedIndex) {
+        _this.setState({
+          clickedIndex: index
+        });
+      } else {
+        _this.setState({
+          clickedIndex: undefined
+        });
+      }
+    });
 
-    _defineProperty(_assertThisInitialized(_this), "deleteWord", function () {});
+    _defineProperty(_assertThisInitialized(_this), "updateWord", function (originalWord, editWord, definition) {
+      axios.put('/glossary', {
+        originalWord: originalWord,
+        editWord: editWord,
+        definition: definition
+      }).then(function (response) {
+        if (response.data === 'error') {
+          alert('Failed to update word');
+        } else if (response.data === 'success') {
+          _this.searchWords(_this.state.currentSearch);
+        } else {
+          alert("Tried to update word that isn't saved somehow.");
+        }
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "deleteWord", function (word) {
+      axios["delete"]('/glossary', {
+        params: {
+          word: word
+        }
+      }).then(function (response) {
+        if (response.data === 'error') {
+          alert('Failed to delete word');
+        } else if (response.data === 'success') {
+          _this.searchWords(_this.state.currentSearch);
+        } else {
+          alert("Tried to delete word that isn't saved somehow.");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    });
 
     _this.state = {
-      // words: [],
       words: [],
-      currentSearch: '' // filteredWords: this.props.testWords
-
+      wordAmount: 0,
+      currentSearch: '',
+      clickedIndex: undefined,
+      pages: [],
+      clickedPage: 0,
+      remainder: 0
     }; // this.timeGate = false;
 
     return _this;
@@ -111,14 +181,23 @@ var App = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      // let filteredWords = [];
       return /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
         id: "app",
-        children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_TopBar["default"], {}), /*#__PURE__*/(0, _jsxRuntime.jsx)(_SideBar["default"], {
+        children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_TopBar["default"], {
+          amount: this.state.wordAmount,
+          remainder: this.state.remainder,
+          clickedPage: this.state.clickedPage
+        }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_SideBar["default"], {
           search: this.searchWords.bind(this),
-          input: this.insertWord.bind(this)
+          input: this.insertWord.bind(this),
+          pages: this.state.pages,
+          pageClick: this.pageClick.bind(this)
         }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_RightBar["default"], {
-          words: this.state.words
+          words: this.state.words,
+          clickedIndex: this.state.clickedIndex,
+          setIndex: this.editClick.bind(this),
+          update: this.updateWord.bind(this),
+          "delete": this.deleteWord.bind(this)
         })]
       });
     }

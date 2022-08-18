@@ -33,20 +33,58 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var WordEntry = /*#__PURE__*/function (_React$Component) {
   _inherits(WordEntry, _React$Component);
 
   var _super = _createSuper(WordEntry);
 
   function WordEntry(props) {
+    var _this;
+
     _classCallCheck(this, WordEntry);
 
-    return _super.call(this, props);
+    _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "handleChange", function (query) {
+      console.log(query.target);
+
+      if (query.target.name === 'editWord') {
+        _this.setState({
+          editWord: query.target.value
+        });
+      } else {
+        _this.setState({
+          editDefinition: query.target.value
+        });
+      }
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function () {
+      event.preventDefault();
+      event.target.reset();
+
+      _this.props.update(_this.props.word.word, _this.state.editWord, _this.state.editDefinition);
+
+      _this.setState({
+        editWord: '',
+        editDefinition: ''
+      });
+    });
+
+    _this.state = {
+      editWord: '',
+      editDefinition: ''
+    };
+    return _this;
   }
 
   _createClass(WordEntry, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
         className: "wordEntry",
         children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("h3", {
@@ -54,9 +92,41 @@ var WordEntry = /*#__PURE__*/function (_React$Component) {
         }), /*#__PURE__*/(0, _jsxRuntime.jsx)("h3", {
           children: this.props.word.definition
         }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+          onClick: function onClick() {
+            _this2.props.setIndex(_this2.props.index);
+          },
           children: "Edit"
         }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+          onClick: function onClick() {
+            _this2.props["delete"](_this2.props.word.word);
+          },
           children: "Delete"
+        }), this.props.index === this.props.clickedIndex && /*#__PURE__*/(0, _jsxRuntime.jsxs)("form", {
+          className: "editInput",
+          onSubmit: this.handleSubmit,
+          children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
+            type: "text",
+            className: "editWordInput",
+            name: "editWord",
+            placeholder: "Edit the word",
+            onChange: function onChange(e) {
+              _this2.handleChange(e);
+            },
+            required: true
+          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+            type: "submit",
+            className: "editSubmitButton",
+            children: "Submit"
+          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
+            type: "text",
+            className: "editDefinitionInput",
+            name: "editDefinition",
+            onChange: function onChange(e) {
+              _this2.handleChange(e);
+            },
+            placeholder: "Edit the definition",
+            required: true
+          })]
         })]
       });
     }

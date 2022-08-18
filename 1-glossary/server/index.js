@@ -14,38 +14,57 @@ app.use(express.static(path.join(__dirname, "../client/dist")));
 //If not using express.json, maybe try stringifying data client-side before sending to server?
 
 app.post('/glossary', (req, res) => {
-  postWord({word: req.body.word, definition: req.body.definition},
-    (err, response) => {
-      if (err) {
-        console.error(err);
-        res.send('error');
-      } else if (response === 'word already saved') {
-        res.send('word already saved');
-      } else {
-        console.log('word saved!');
-        res.send('word saved');
-      }
-    });
+  let query = {word: req.body.word, definition: req.body.definition}
+  postWord(query, (err, response) => {
+    if (err) {
+      console.error(err);
+      res.send('error');
+    } else if (response === 'word already saved') {
+      res.send('word already saved');
+    } else {
+      res.send('word saved');
+    }
+  });
 });
 
 app.get('/glossary', (req, res) => {
   searchWord(req.query, (err, response) => {
     if (err) {
       console.error(err);
-      res.send({error: true});
+      res.send('error');
     } else {
-      console.log(response);
+      // console.log(response);
       res.send(response);
     }
   });
 });
 
 app.put('/glossary', (req, res) => {
-
+  let query = {word: req.body.originalWord};
+  let edit = {word: req.body.editWord, definition: req.body.definition};
+  updateWord(query, edit, (err, response) => {
+    if (err) {
+      console.error(err);
+      res.send('error');
+    } else if (response === 'successful update') {
+      res.send('success');
+    } else {
+      res.send('no word found');
+    }
+  });
 });
 
 app.delete('/glossary', (req, res) => {
-
+  deleteWord(req.query, (err, response) => {
+    if (err) {
+      console.error(err);
+      res.send('error');
+    } else if (response === 'successful delete'){
+      res.send('success');
+    } else {
+      res.send('no word found');
+    }
+  })
 });
 
 

@@ -16,10 +16,14 @@
   margin: 0;
 }
 
+/*
+
 html,
 body {
   height: 100%;
 }
+
+*/
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -53,15 +57,185 @@ h6 {
   overflow-wrap: break-word;
 }
 
+/*
 main {
   max-width: 840px;
   padding: 16px;
   margin: auto;
 }
+*/
+
+#app {
+  height: 100vh
+}
+
+/*
+  MAIN DIVS
+*/
+
+#topBar {
+  height: 20%;
+  padding: 2% 1.2% ;
+  background-color: gray;
+  border-bottom: 6px solid green;
+}
+
+#sideBar {
+  float: left;
+  height: 80%;
+  width: 20%;
+  padding: 1% 1%;
+  border-right: 6px solid green;
+}
+
+#rightBar {
+  float: left;
+  height: 80%;
+  width: 50%;
+  margin-left: 5%;
+  padding: 2% 2%;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
+/*
+  TOP BAR
+*/
+
+.logo {
+  font-size: 7em;
+}
+
+.wordAmountIndicator {
+  display: inline-block;
+  margin-right: 5%;
+}
+
+.wordRangeIndicator {
+  display: inline-block;
+  width: 20%;
+}
+
+.flashCardButton {
+  display: inline-block;
+  margin-right: 1%;
+}
+
+.alphabetSortButton {
+  display: inline-block;
+  margin-right: 1%;
+}
+
+/*
+  SIDE BAR
+*/
+
+#input {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: gray;
+  height: 20%;
+  width: 100%;
+  padding: 3% 0 3% 3%;
+}
+
+.wordSearchInput {
+  width: 200%;
+}
+
+.wordNameInput {
+  width: 53%;
+}
+
+.wordDefinitionInput {
+  width: 85%;
+  height: 60%;
+  margin-top: 1%;
+  text-overflow: auto;
+}
+
+.submitButton {
+  width: 30%;
+  margin-left: 2%;
+}
+
+#pages {
+  display: flex;
+  margin-top: 3%;
+  background-color: gray;
+  height: 10%;
+  padding: 3% 0 3% 3%;
+  flex-direction: wrap;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.pageTitle {
+  margin-right: 8px;
+  height: 100%;
+}
+
+.pageButton {
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+/*
+  RIGHT BAR
+*/
 
 .wordEntry {
-  margin: 5%;
-  padding: 5%;
+  margin-bottom: 5%;
+  padding: 1% 6% 5%;
   border: 4px solid gray;
+  border-radius: 25%;
   box-shadow: 4px 10px rgb(63, 62, 62);
+}
+
+.wordName {
+  font-size: 4em;
+}
+
+.wordDefinition {
+  margin-bottom: 2%;
+  margin-left: 2%;
+  width: 40%;
+}
+
+.editButton {
+  margin-right: 2%;
+  background-color: green;
+}
+
+.deleteButton {
+  background-color: red;
+}
+
+.editInput {
+  margin-top: 3%;
+  width: 50%;
+}
+
+.editWordInput {
+  width: 60%;
+  margin-right: 3%;
+}
+
+.editDefinitionInput {
+  margin-top: 3%;
+  width: 93%;
+  height: 80px;
+}
+
+.editSubmitButton {
+  width: 30%;
+}
+
+button:hover {
+  cursor: pointer;
 }

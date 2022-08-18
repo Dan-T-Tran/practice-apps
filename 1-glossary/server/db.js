@@ -13,10 +13,7 @@ let Word = mongoose.model('Words', wordSchema);
 module.exports = {
   postWord: function(query, callback) {
     let newWord = new Word(query);
-    // let word = {word: query.word};
     let regex = new RegExp(`^${query.word}$`, 'i');
-    // console.log(word);
-    // console.log(regex);
 
     //Regex used to find word match and is case-insensitive via 'i'
     //Will only find exact match from start of string, will ignore past the query
@@ -41,34 +38,58 @@ module.exports = {
   },
 
   searchWord: function(query, callback) {
-    if (query.word) {
-      // console.log('there is a word')
-      let regex = new RegExp(`${query.word}`, 'i');
-      Word.find({word: {$regex: regex}}, (err, documents) => {
+    let regex = new RegExp(`${query.word}`, 'i');
+    Word.find({word: {$regex: regex}}, (err, documents) => {
+      if (err) {
+        callback(err);
+      } else {
+        let start = query.index * 10;
+        let end = start + 10
+        documentChunk = documents.slice(start, end);
+        let data = {
+          amount: documents.length,
+          documents: documentChunk,
+          remainder: documentChunk.length
+        };
+        callback(null, data);
+      }
+    })
+  },
+
+  updateWord: function(query, edit, callback) {
+    console.log(query);
+    console.log(edit);
+    Word.findOneAndUpdate(query, edit, (err, document) => {
+      if (err) {
+        callback(err);
+      } else if (document) {
+        callback(null, 'successful update');
+      } else {
+        callback(null, 'no word found');
+      }
+    })
+  },
+
+  deleteWord: function(query, callback) {
+    if (query.deleteAll) {
+      Word.deleteMany((err) => {
         if (err) {
           callback(err);
         } else {
-          callback(null, documents);
+          callback(null, 'successful delete');
         }
       })
     } else {
-      // console.log('there is no word')
-      Word.find((err, documents) => {
+      Word.findOneAndDelete(query, (err, document) => {
         if (err) {
           callback(err);
+        } else if (document) {
+          callback(null, 'successful delete');
         } else {
-          callback(null, documents);
+          callback(null, 'no word found');
         }
       })
     }
-  },
-
-  updateWord: function() {
-
-  },
-
-  deleteWord: function() {
-
   }
 };
 

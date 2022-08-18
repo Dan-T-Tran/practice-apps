@@ -33,100 +33,36 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var Pages = /*#__PURE__*/function (_React$Component) {
+  _inherits(Pages, _React$Component);
 
-var Input = /*#__PURE__*/function (_React$Component) {
-  _inherits(Input, _React$Component);
+  var _super = _createSuper(Pages);
 
-  var _super = _createSuper(Input);
+  function Pages(props) {
+    _classCallCheck(this, Pages);
 
-  function Input(props) {
-    var _this;
-
-    _classCallCheck(this, Input);
-
-    _this = _super.call(this, props);
-
-    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (e) {
-      event.preventDefault();
-      event.target.reset();
-
-      _this.props.input(_this.state.currentWord, _this.state.currentDefinition);
-
-      _this.setState({
-        currentWord: '',
-        currentDefinition: ''
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChange", function (query) {
-      if (query.target.name === 'wordInput') {
-        _this.setState({
-          currentWord: query.target.value
-        });
-      } else {
-        _this.setState({
-          currentDefinition: query.target.value
-        });
-      }
-    });
-
-    _this.state = {
-      currentWord: '',
-      currentDefinition: ''
-    };
-    return _this;
+    return _super.call(this, props);
   }
 
-  _createClass(Input, [{
+  _createClass(Pages, [{
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this = this;
 
-      return /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-        id: "input",
-        children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("form", {
-          className: "wordSearch",
-          children: /*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
-            type: "text",
-            className: "wordSearchInput",
-            name: "wordSearch",
-            placeholder: "Search Word",
-            onChange: function onChange(e) {
-              return _this2.props.search(e.target.value);
-            }
-          })
-        }), /*#__PURE__*/(0, _jsxRuntime.jsxs)("form", {
-          className: "wordInput",
-          onSubmit: this.handleSubmit,
-          children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
-            type: "text",
-            className: "wordNameInput",
-            name: "wordInput",
-            placeholder: "Insert Word",
-            onChange: this.handleChange,
-            required: true
-          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
-            type: "submit",
-            className: "submitButton",
-            children: "Submit"
-          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("input", {
-            type: "text",
-            className: "wordDefinitionInput",
-            name: "definitionInput",
-            placeholder: "Insert Definition",
-            onChange: this.handleChange,
-            required: true
-          })]
-        })]
+      return /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
+        children: /*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
+          className: "pageButton",
+          onClick: function onClick() {
+            _this.props.pageClick(_this.props.index);
+          },
+          children: this.props.page
+        })
       });
     }
   }]);
 
-  return Input;
+  return Pages;
 }(_react["default"].Component);
 
-;
-var _default = Input; //atm, doing both input and search in same class. Maybe split them?
-
+var _default = Pages;
 exports["default"] = _default;

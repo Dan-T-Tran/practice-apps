@@ -18,7 +18,12 @@ var RightBar = function RightBar(props) {
     id: "rightBar",
     children: props.words.map(function (word, index) {
       return /*#__PURE__*/(0, _jsxRuntime.jsx)(_WordEntry["default"], {
-        word: word
+        word: word,
+        index: index,
+        clickedIndex: props.clickedIndex,
+        setIndex: props.setIndex,
+        update: props.update,
+        "delete": props["delete"]
       }, index);
     })
   });
