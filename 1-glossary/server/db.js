@@ -39,7 +39,16 @@ module.exports = {
 
   searchWord: function(query, callback) {
     let regex = new RegExp(`${query.word}`, 'i');
-    Word.find({word: {$regex: regex}}, (err, documents) => {
+    let sort;
+    if (!query.sort) {
+      sort = null;
+    } else if (query.sort === 'ascending') {
+      sort = {sort:{word:'ascending'}};
+    } else {
+      sort= {sort:{word:'descending'}};
+    }
+
+    Word.find({word: {$regex: regex}}, null, sort, (err, documents) => {
       if (err) {
         callback(err);
       } else {

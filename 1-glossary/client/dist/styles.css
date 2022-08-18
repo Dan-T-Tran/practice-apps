@@ -77,7 +77,7 @@ main {
   height: 20%;
   padding: 2% 1.2% ;
   background-color: gray;
-  border-bottom: 6px solid green;
+  border-bottom: 6px solid rgb(65, 189, 238);
 }
 
 #sideBar {
@@ -85,7 +85,7 @@ main {
   height: 80%;
   width: 20%;
   padding: 1% 1%;
-  border-right: 6px solid green;
+  border-right: 6px solid rgb(65, 189, 238);
 }
 
 #rightBar {

@@ -10,7 +10,8 @@ const TopBar = (props) => {
     <h3 className='wordAmountIndicator'>There are {props.amount} words so far!</h3>
     <h3 className='wordRangeIndicator'>Currently showing words #{start}-{end}</h3>
     <button className='flashCardButton'>Flash Card Mode</button>
-    <button className='alphabetSortButton'>Sort Alphabetically</button>
+    <button className='alphabetSortButton' onClick={()=>{props.sortWords('ascending')}}>Sort Alphabetically</button>
+    <button className='alphabetSortButton' onClick={()=>{props.sortWords('descending')}}>Sort Alphabetically Backwards</button>
     <button className='deleteAllButton' onClick={props.deleteAll}>Delete All Entries</button>
   </div>
   );

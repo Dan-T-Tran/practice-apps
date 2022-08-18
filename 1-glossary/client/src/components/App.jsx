@@ -16,7 +16,8 @@ class App extends React.Component {
       clickedIndex: undefined,
       pages: [],
       clickedPage: 0,
-      remainder: 0
+      remainder: 0,
+      sort: undefined
     };
     // this.timeGate = false;
   }
@@ -26,7 +27,7 @@ class App extends React.Component {
   }
 
   searchWords = (query, page = 0) => {
-    axios.get('/glossary', {params: {word: query, index: page}})
+    axios.get('/glossary', {params: {word: query, index: page, sort: this.state.sort}})
     .then((response) => {
       if (response.data === 'error') {
         alert('Failed to get words');
@@ -57,6 +58,18 @@ class App extends React.Component {
 
   pageClick = (page) => {
     this.searchWords(this.state.currentSearch, page);
+  }
+
+  sortWords = (condition) => {
+    if (this.state.sort === condition) {
+      this.setState({
+        sort: undefined
+      }, () => {this.searchWords(this.state.currentSearch, this.state.clickedPage)});
+    } else {
+      this.setState({
+        sort: condition
+      }, () => {this.searchWords(this.state.currentSearch, this.state.clickedPage)});
+    }
   }
 
   insertWord = (word, definition) => {
@@ -132,6 +145,7 @@ class App extends React.Component {
           amount={this.state.wordAmount}
           remainder={this.state.remainder}
           clickedPage={this.state.clickedPage}
+          sortWords={this.sortWords.bind(this)}
           deleteAll={this.deleteAllWords.bind(this)}
         />
 
@@ -156,3 +170,20 @@ class App extends React.Component {
 };
 
 export default App;
+
+/*
+HYPER CHALLENGE
+
+Do flash card mode, but animate it...
+  On initialization of Flash Card Mode:
+    Show a random word
+      Probably disable the search feature for this
+    On click, reveal definition
+      Fade in?
+      Expand card?
+      Somehow do a flipping to backside animation?
+    Have two buttons for going back to previous card or getting another random card
+      Make sure the starting card can't go backwards
+      Perhaps on initialization, search for all cards without slicing, stuff into array, shuffle, then just iterate as you click?
+
+*/
