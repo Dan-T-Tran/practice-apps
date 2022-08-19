@@ -1,10 +1,10 @@
 /**
- * 
+ *
  * Based on Josh Comeau's CSS Reset: https://www.joshwcomeau.com/css/custom-css-reset/.
- * 
+ *
  * Feel free to edit this file as needed.
- * 
- */ 
+ *
+ */
 
 *,
 *::before,
@@ -26,7 +26,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-
+/*
 img,
 picture,
 video,
@@ -57,4 +57,19 @@ main {
   max-width: 840px;
   padding: 16px;
   margin: auto;
+}
+*/
+
+#homePage {
+  margin: 2%;
+  padding: 2%;
+  border: 4px solid gray;
+  box-shadow: 4px 6px rgb(61, 60, 60);
+}
+
+form {
+  margin: 2%;
+  padding: 2%;
+  border: 4px solid gray;
+  box-shadow: 4px 6px rgb(61, 60, 60);
 }

@@ -9,6 +9,8 @@ module.exports = (req, res, next) => {
 
   let cookieString = req.get("Cookie") || "";
 
+  // console.log(cookieString);
+
   parsedCookies = cookieString.split("; ").reduce((cookies, cookie) => {
     if (cookie.length) {
       let index = cookie.indexOf("=");
@@ -18,6 +20,8 @@ module.exports = (req, res, next) => {
     }
     return cookies;
   }, {});
+
+  // console.log(parsedCookies);
 
   if (parsedCookies.s_id) {
     req.session_id = parsedCookies.s_id;
