@@ -17,17 +17,26 @@ class App extends React.Component {
       pages: [],
       clickedPage: 0,
       remainder: 0,
-      sort: undefined
+      sort: undefined,
+      showFavorites: false,
+      flashCardMode: false,
+      flashCardIndex: 0,
+      flashCard: {}
     };
-    // this.timeGate = false;
   }
 
   componentDidMount() {
     this.searchWords('');
   }
 
-  searchWords = (query, page = 0) => {
-    axios.get('/glossary', {params: {word: query, index: page, sort: this.state.sort}})
+  searchWords = (query, page = 0, favorite = this.state.showFavorites) => {
+    axios.get('/glossary', {params: {
+      word: query,
+      index: page,
+      sort: this.state.sort,
+      showFavorites: favorite,
+    }}
+    )
     .then((response) => {
       if (response.data === 'error') {
         alert('Failed to get words');
@@ -49,16 +58,79 @@ class App extends React.Component {
           clickedIndex: undefined,
           pages: tempPages,
           clickedPage: page,
-          remainder: 10 - response.data.remainder
+          remainder: 10 - response.data.remainder,
+          showFavorites: favorite,
+          flashCardMode: false
         })
       }
     })
     .catch((err) => {console.log(err)});
   };
 
+  shuffleWords = (words) => {
+    let randomSwitch = Math.floor(Math.random() * words.length);
+
+    for (let i = 0; i < words.length; i++) {
+      let oldOrigin = words[i];
+      let oldSwitch = words[randomSwitch];
+      words[i] = oldSwitch;
+      words[randomSwitch] = oldOrigin;
+    }
+
+    return words;
+  };
+
+  flashCardMode = () => {
+    if (this.state.flashCardMode) {
+      this.searchWords('');
+    } else {
+      axios.get('/glossary', {params: {
+        word: '',
+        flashCardMode: true
+      }})
+      .then((response) => {
+        if (response.data ==='error') {
+          alert('Error in starting Flash Card Mode');
+        } else {
+          let shuffledWords = this.shuffleWords(response.data.documents.slice());
+          this.setState({
+            words: shuffledWords,
+            wordAmount: response.data.amount,
+            currentSearch: '',
+            clickedIndex: undefined,
+            pages: [],
+            clickedPage: 0,
+            remainder: 0,
+            sort: undefined,
+            showFavorites: false,
+            flashCardMode: true,
+            flashCardIndex: 0,
+            flashCard: shuffledWords[0]
+          })
+        }
+      })
+    }
+  };
+
+  flashCardChange = (direction) => {
+    let newIndex = this.state.flashCardIndex;
+    if (direction === 'next') {
+      console.log('next')
+      newIndex++;
+    } else {
+      console.log('back')
+      newIndex--;
+    }
+    let newFlashCard = this.state.words[newIndex];
+    this.setState({
+      flashCardIndex: newIndex,
+      flashCard: newFlashCard
+    })
+  };
+
   pageClick = (page) => {
     this.searchWords(this.state.currentSearch, page);
-  }
+  };
 
   sortWords = (condition) => {
     if (this.state.sort === condition) {
@@ -70,10 +142,23 @@ class App extends React.Component {
         sort: condition
       }, () => {this.searchWords(this.state.currentSearch, this.state.clickedPage)});
     }
+  };
+
+  showFavorites = () => {
+    this.searchWords(this.state.currentSearch, 0, !this.state.showFavorites)
+  }
+
+  updateFavorite = (word, definition, favorite) => {
+    console.log(favorite);
+    if (favorite) {
+      this.updateWord(word, word, definition, false);
+    } else {
+      this.updateWord(word, word, definition, true);
+    }
   }
 
   insertWord = (word, definition) => {
-    axios.post('/glossary', {word: word, definition: definition})
+    axios.post('/glossary', {word: word, definition: definition, favorite: false})
     .then((response) => {
       if (response.data === 'error') {
         alert('Failed to insert word.');
@@ -97,8 +182,8 @@ class App extends React.Component {
     }
   };
 
-  updateWord = (originalWord, editWord, definition) => {
-    axios.put('/glossary', {originalWord: originalWord, editWord: editWord, definition: definition})
+  updateWord = (originalWord, editWord, definition, favorite) => {
+    axios.put('/glossary', {originalWord: originalWord, editWord: editWord, definition: definition, favorite: favorite})
     .then((response) => {
       if (response.data === 'error') {
         alert('Failed to update word');
@@ -135,7 +220,7 @@ class App extends React.Component {
         }
       })
     }
-  }
+  };
 
 
   render() {
@@ -145,7 +230,12 @@ class App extends React.Component {
           amount={this.state.wordAmount}
           remainder={this.state.remainder}
           clickedPage={this.state.clickedPage}
+          sortStatus={this.state.sort}
           sortWords={this.sortWords.bind(this)}
+          showFavorites={this.showFavorites.bind(this)}
+          flashCardMode={this.flashCardMode.bind(this)}
+          favoriteStatus={this.state.showFavorites}
+          flashCardStatus={this.state.flashCardMode}
           deleteAll={this.deleteAllWords.bind(this)}
         />
 
@@ -155,6 +245,7 @@ class App extends React.Component {
           pages={this.state.pages}
           pageClick={this.pageClick.bind(this)}
           clickedPage={this.state.clickedPage}
+          flashCardStatus={this.state.flashCardMode}
         />
 
         <RightBar
@@ -163,6 +254,12 @@ class App extends React.Component {
           setIndex={this.editClick.bind(this)}
           update={this.updateWord.bind(this)}
           delete={this.deleteWord.bind(this)}
+          updateFavorite={this.updateFavorite.bind(this)}
+          flashCardChange={this.flashCardChange.bind(this)}
+          flashCardMode={this.state.flashCardMode}
+          flashCard={this.state.flashCard}
+          flashCardIndex={this.state.flashCardIndex}
+          amount={this.state.wordAmount}
         />
       </div>
     )

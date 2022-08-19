@@ -5,7 +5,8 @@ mongoose.connect('mongodb://localhost:27017/glossary', {useNewUrlParser: true, u
 
 const wordSchema = new mongoose.Schema({
   word: String,
-  definition: String
+  definition: String,
+  favorite: Boolean
 });
 
 let Word = mongoose.model('Words', wordSchema);
@@ -38,17 +39,25 @@ module.exports = {
   },
 
   searchWord: function(query, callback) {
+    let findQuery = {}
     let regex = new RegExp(`${query.word}`, 'i');
-    let sort;
-    if (!query.sort) {
-      sort = null;
-    } else if (query.sort === 'ascending') {
-      sort = {sort:{word:'ascending'}};
-    } else {
-      sort= {sort:{word:'descending'}};
+    findQuery.word = {$regex: regex};
+    if (query.showFavorites === 'true') {
+      findQuery.favorite = true;
     }
 
-    Word.find({word: {$regex: regex}}, null, sort, (err, documents) => {
+    let sort = {};
+    if (!query.sort) {
+      sort = {};
+    } else if (query.sort === 'ascending') {
+      sort.sort = {word:'ascending'};
+    } else {
+      sort.sort = {word:'descending'};
+    }
+
+
+
+    Word.find(findQuery, null, sort, (err, documents) => {
       if (err) {
         callback(err);
       } else {
@@ -65,9 +74,22 @@ module.exports = {
     })
   },
 
+  searchFlash: function(query, callback) {
+    Word.find((err, documents) => {
+      if (err) {
+        callback(err);
+      } else {
+        let data = {
+          amount: documents.length,
+          documents: documents,
+          remainder: documents.length
+        };
+        callback(null, data);
+      }
+    })
+  },
+
   updateWord: function(query, edit, callback) {
-    console.log(query);
-    console.log(edit);
     Word.findOneAndUpdate(query, edit, (err, document) => {
       if (err) {
         callback(err);

@@ -9,7 +9,7 @@ const SideBar = (props) => (
       input={props.input}
     />
     <div id='pages'>
-      <h3 className='pageTitle'>Pages</h3>
+      {props.flashCardStatus ? <h3 className='pageTitle'>Flash Card Mode On!</h3> : <h3 className='pageTitle'>Pages</h3>}
       {props.pages.map((page, index) => (
         <Pages
           page={page}

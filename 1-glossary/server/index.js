@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 
-const {postWord, searchWord, updateWord, deleteWord} = require('./db.js');
+const {postWord, searchWord, searchFlash, updateWord, deleteWord} = require('./db.js');
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, "../client/dist")));
 //If not using express.json, maybe try stringifying data client-side before sending to server?
 
 app.post('/glossary', (req, res) => {
-  let query = {word: req.body.word, definition: req.body.definition}
+  let query = {word: req.body.word, definition: req.body.definition, favorite: req.body.favorite}
   postWord(query, (err, response) => {
     if (err) {
       console.error(err);
@@ -28,20 +28,31 @@ app.post('/glossary', (req, res) => {
 });
 
 app.get('/glossary', (req, res) => {
-  searchWord(req.query, (err, response) => {
-    if (err) {
-      console.error(err);
-      res.send('error');
-    } else {
-      // console.log(response);
-      res.send(response);
-    }
-  });
+  if (req.query.flashCardMode) {
+    searchFlash(req.query, (err, response) => {
+      if (err) {
+        console.error(err);
+        res.send('error');
+      } else {
+        res.send(response);
+      }
+    })
+  } else {
+    searchWord(req.query, (err, response) => {
+      if (err) {
+        console.error(err);
+        res.send('error');
+      } else {
+        // console.log(response);
+        res.send(response);
+      }
+    });
+  }
 });
 
 app.put('/glossary', (req, res) => {
   let query = {word: req.body.originalWord};
-  let edit = {word: req.body.editWord, definition: req.body.definition};
+  let edit = {word: req.body.editWord, definition: req.body.definition, favorite: req.body.favorite};
   updateWord(query, edit, (err, response) => {
     if (err) {
       console.error(err);
